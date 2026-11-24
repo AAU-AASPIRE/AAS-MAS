@@ -20,7 +20,7 @@ import pytest
 pytest.importorskip("spade")
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "line-agents"))
+sys.path.insert(0, str(ROOT / "AAS-MAS"))
 
 from lineagents.xmpp import free_port                                      # noqa: E402
 
@@ -43,7 +43,7 @@ def manager(tmp_path):
         process = subprocess.Popen([sys.executable, "-m", "lineagents", "--aas", AAS, "--xmpp-port",
                                     str(port), "--executor", "simulated", "--http", str(http), "--stay"], cwd=ROOT, stdout=out,
                                    stderr=subprocess.STDOUT,
-                                   env={**os.environ, "PYTHONPATH": str(ROOT / "line-agents"), "PYTHONUTF8": "1"})
+                                   env={**os.environ, "PYTHONPATH": str(ROOT / "AAS-MAS"), "PYTHONUTF8": "1"})
     started, line = time.monotonic(), ""
     while time.monotonic() - started < 60:      # the manager says which agents run once they do
         line = next((l for l in log.read_text(encoding="utf-8").splitlines() if l.startswith("agents:")), "")
@@ -84,20 +84,26 @@ if __name__ == "__main__":
 """
 
 
+# The line has two filling modules (since 23 Nov 2026): either may win the Filling step.
+FILLING = {"FillingModuleAAS", "Filling2ModuleAAS"}
+
+
 def test_a_product_agent_in_another_process_orders_over_xmpp(manager, tmp_path):
     """The product agent in a process of its own as well: no message is handed over inside one SPADE."""
     port, started, _ = manager
     assert "fillingmoduleaas@localhost" in started, started
     script = tmp_path / "order.py"
     script.write_text(ORDER, encoding="utf-8")
-    done = subprocess.run([sys.executable, str(script), str(ROOT / "line-agents"), AAS, str(port)], cwd=ROOT,
+    done = subprocess.run([sys.executable, str(script), str(ROOT / "AAS-MAS"), AAS, str(port)], cwd=ROOT,
                           capture_output=True, text=True, timeout=180, env={**os.environ, "PYTHONUTF8": "1"})
     found = next((l for l in done.stdout.splitlines() if l.startswith("HISTORY ")), None)
     assert found, done.stdout[-2000:] + done.stderr[-2000:]
     history = json.loads(found[len("HISTORY "):])
-    assert [h for h in history if h[0] not in HANDLING] == [
-        ["Filling", "FillingModuleAAS", "done"], ["Stoppering", "StopperingModuleAAS", "done"],
-        ["Capping", "CappingModuleAAS", "done"], ["Inspection", "InspectionModuleAAS", "done"]], history
+    steps = [h for h in history if h[0] not in HANDLING]
+    assert [h[0] for h in steps] == ["Filling", "Stoppering", "Capping", "Inspection"], history
+    assert all(h[2] == "done" for h in steps) and [h[1] for h in steps][1:] == [
+        "StopperingModuleAAS", "CappingModuleAAS", "InspectionModuleAAS"], history
+    assert steps[0][1] in FILLING, history
     carried = [h for h in history if h[0] in HANDLING]
     assert carried and all(h[2] == "done" for h in carried) and len({h[1] for h in carried}) == 1, history
 
@@ -145,7 +151,7 @@ def test_an_order_from_another_process_gets_a_product_agent_per_vial(manager, tm
     assert "orders@localhost" in started, started
     script = tmp_path / "customer.py"
     script.write_text(CUSTOMER, encoding="utf-8")
-    done = subprocess.run([sys.executable, str(script), str(ROOT / "line-agents"), str(port)], cwd=ROOT,
+    done = subprocess.run([sys.executable, str(script), str(ROOT / "AAS-MAS"), str(port)], cwd=ROOT,
                           capture_output=True, text=True, timeout=240, env={**os.environ, "PYTHONUTF8": "1"})
     found = next((l for l in done.stdout.splitlines() if l.startswith("RECEIVED ")), None)
     assert found, done.stdout[-2000:] + done.stderr[-2000:]
@@ -171,8 +177,8 @@ def test_an_order_over_http(manager):
             break
         time.sleep(1)
     assert mine["done"], mine
-    assert [s["resource"] for s in mine["steps"] if s["step"] not in HANDLING] == [
-        "FillingModuleAAS", "StopperingModuleAAS", "CappingModuleAAS", "InspectionModuleAAS"]
+    resources = [s["resource"] for s in mine["steps"] if s["step"] not in HANDLING]
+    assert resources[0] in FILLING and resources[1:] == ["StopperingModuleAAS", "CappingModuleAAS", "InspectionModuleAAS"]
     assert {s["resource"] for s in mine["steps"] if s["step"] in HANDLING} <= {
         "PlanarShuttle1AAS", "PlanarShuttle2AAS", "PlanarShuttle3AAS"}
     request = urllib.request.Request(f"http://localhost:{http}/orders", json.dumps({"product": "NoSuchProduct"}).encode(),
