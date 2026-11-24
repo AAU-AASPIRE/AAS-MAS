@@ -14,7 +14,7 @@ pytest.importorskip("spade")
 pytest.importorskip("aas_model")
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path[:0] = [str(ROOT / "line-agents"), str(ROOT / "cell" / "examples")]
+sys.path[:0] = [str(ROOT / "AAS-MAS"), str(ROOT / "aseptic-line" / "cell" / "examples")]
 
 import example_line                                                         # noqa: E402
 from lineagents.aas import is_module                                         # noqa: E402
@@ -95,7 +95,7 @@ def test_a_step_that_fails_is_carried_out_by_another_module(line):
 def with_bottom_up_filling(resources: dict) -> dict:
     """The filling module's AAS with BottomUpFilling described (as the skill editor saves it: not built)
     and its capabilities derived anew: it offers BottomUpFilling after a reconfiguration."""
-    sys.path.insert(0, str(ROOT / "cell" / "eval"))
+    sys.path.insert(0, str(ROOT / "aseptic-line" / "cell" / "eval"))
     from modreg.offer import capabilities
     from modsync.aasjson import parts, submodel
     from scenarios import with_written

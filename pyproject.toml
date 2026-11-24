@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aas-mas"
+version = "0.1.0"
+description = "The multi-agent orchestrator of the line: order, product and resource agents over XMPP (SPADE) that bid for process steps using the AASs' capabilities (VDI/VDE 2193)"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+dependencies = ["modreg @ git+https://github.com/AAU-AASPIRE/modreg", "modplan @ git+https://github.com/AAU-AASPIRE/modplan", "modsync @ git+https://github.com/AAU-AASPIRE/modsync",
+                "modlink @ git+https://github.com/AAU-AASPIRE/modlink", "iec61499-mgmt @ git+https://github.com/AAU-AASPIRE/iec61499-mgmt-py",
+                "spade>=4.1,<5", "greenlet>=3", "paho-mqtt>=2"]
+
+[project.optional-dependencies]
+test = ["pytest>=7,<9", "asyncua>=1.1"]
+
+[project.scripts]
+lineagents = "lineagents.__main__:main"
+
+[tool.setuptools]
+packages = ["lineagents"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

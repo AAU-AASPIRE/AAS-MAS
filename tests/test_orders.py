@@ -12,7 +12,7 @@ pytest.importorskip("spade")
 pytest.importorskip("aas_model")
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path[:0] = [str(ROOT / "line-agents"), str(ROOT / "cell" / "examples")]
+sys.path[:0] = [str(ROOT / "AAS-MAS"), str(ROOT / "aseptic-line" / "cell" / "examples")]
 
 import example_line                                                         # noqa: E402
 from spade.agent import Agent                                                # noqa: E402

@@ -21,7 +21,7 @@ pytest.importorskip("spade")
 pytest.importorskip("paho.mqtt")
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "line-agents"))
+sys.path.insert(0, str(ROOT / "AAS-MAS"))
 
 from lineagents.aas import AasServer                                         # noqa: E402
 
@@ -75,7 +75,7 @@ def test_an_agent_starts_when_its_modules_aas_is_published(tmp_path):
         manager = subprocess.Popen([sys.executable, "-m", "lineagents", "--aas", AAS, "--mqtt", "localhost:1883",
                                     "--every", "600", "--executor", "simulated", "--stay"], cwd=ROOT, stdout=out,
                                    stderr=subprocess.STDOUT,
-                                   env={**os.environ, "PYTHONPATH": str(ROOT / "line-agents"), "PYTHONUTF8": "1"})
+                                   env={**os.environ, "PYTHONPATH": str(ROOT / "AAS-MAS"), "PYTHONUTF8": "1"})
 
     def seen(text: str, seconds: float) -> float | None:
         started = time.monotonic()

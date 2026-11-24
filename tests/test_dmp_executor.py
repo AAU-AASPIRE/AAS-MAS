@@ -14,7 +14,7 @@ import pytest
 pytest.importorskip("aas_model")
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path[:0] = [str(ROOT / "line-agents"), str(ROOT / "cell" / "tests")]
+sys.path[:0] = [str(ROOT / "AAS-MAS"), str(ROOT / "aseptic-line" / "cell" / "tests")]
 
 from test_dmp_live import REPOSITORY, UA_PORT, filling, installed, published, stack   # noqa: E402, F401 (fixture)
 from lineagents.aas import Offer                                                         # noqa: E402

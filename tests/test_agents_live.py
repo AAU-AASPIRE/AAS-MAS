@@ -17,8 +17,8 @@ pytest.importorskip("spade")
 pytest.importorskip("aas_model")
 
 ROOT = Path(__file__).resolve().parents[2]
-sys.path[:0] = [str(ROOT / "line-agents"), str(ROOT / "cell" / "examples"), str(ROOT / "cell" / "eval"),
-                str(ROOT / "aas61499-tools" / "tests")]
+sys.path[:0] = [str(ROOT / "AAS-MAS"), str(ROOT / "aseptic-line" / "cell" / "examples"), str(ROOT / "aseptic-line" / "cell" / "eval"),
+                str(ROOT / "modsync" / "tests"), str(ROOT / "modplan" / "tests"), str(ROOT / "modreg" / "tests")]
 
 import example_line                                                         # noqa: E402
 from lineagents.aas import is_module                                         # noqa: E402

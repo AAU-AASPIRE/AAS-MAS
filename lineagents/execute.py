@@ -35,7 +35,7 @@ from pathlib import Path
 from .aas import Offer
 
 MANAGEMENT_PORT = 61499
-HMI = Path(__file__).resolve().parents[2] / "iec61499-opcua-hmi"      # modlink (a submodule)
+HMI = Path(__file__).resolve().parents[2] / "modlink"                 # modlink, beside this repository
 
 
 class Failed(RuntimeError):
