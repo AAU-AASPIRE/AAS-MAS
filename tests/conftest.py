@@ -1,6 +1,6 @@
 """Live tests only launch an explicit executable, never attach to a user's PLC. The live options and
 helpers are the aseptic line's (its conftest.py); the agents' tests also use modsync's test
-helpers, found in the modsync repository beside this one."""
+helpers, found in aaspire-tools beside this repository."""
 from contextlib import contextmanager
 import os
 from pathlib import Path
@@ -11,8 +11,8 @@ import time
 import pytest
 import sys
 
-# modsync's test helpers (test_modsync, test_modsync_desired, ...), beside this repository.
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "modsync" / "tests"))
+# modsync's test helpers (test_modsync, test_modsync_desired, ...), in aaspire-tools beside this repository.
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "aaspire-tools" / "tests"))
 
 
 def pytest_addoption(parser):

@@ -35,7 +35,7 @@ from pathlib import Path
 from .aas import Offer
 
 MANAGEMENT_PORT = 61499
-HMI = Path(__file__).resolve().parents[2] / "modlink"                 # modlink, beside this repository
+HMI = Path(__file__).resolve().parents[2] / "aaspire-tools"           # modlink, in aaspire-tools beside this repository
 
 
 class Failed(RuntimeError):

@@ -9,7 +9,7 @@ The multi-agent orchestrator of the line: product, order and resource agents ove
 | Product agent | Follows its product's recipe: a call for proposals per step to the resource agents, chooses, has the product carried there (the shuttles bid too), accepts, waits for the result |
 | Resource agent | One per module and shuttle, from its AAS: proposes for the capabilities it offers, and where a skill is missing plans one (modplan) and creates it online (modsync) before it runs the step |
 
-The resource agents run a skill over the module's OPC UA server ([modlink](https://github.com/AAU-AASPIRE/modlink),
+The resource agents run a skill over the module's OPC UA server ([modlink](https://github.com/AAU-AASPIRE/aaspire-tools),
 `--executor opcua`), through the AAS server and the DMP (`--executor dmp`), or simulated.
 
 ```powershell
